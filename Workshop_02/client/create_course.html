@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Curso</title>
+  <script>
+    function createCourse() {
+      const name = document.getElementById("name").value;
+      const credits = document.getElementById("credits").value;
+
+      fetch("http://localhost:3001/course", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, credits })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").innerHTML =
+          `<p><b>${data.name}</b> (Créditos: ${data.credits})</p>`;
+      })
+      .catch(error => console.log("Error:", error));
+    }
+  </script>
+</head>
+
+<body>
+
+  <h2>Crear Curso</h2>
+
+  <label>Nombre del curso:</label><br>
+  <input type="text" id="name"><br><br>
+
+  <label>Créditos:</label><br>
+  <input type="number" id="credits"><br><br>
+
+  <button onclick="createCourse()">Crear Curso</button>
+  <button onclick="window.location.href='index.html'">Volver</button>
+
+  <h3>Resultado del curso creado:</h3>
+  <div id="result"></div>
+
+</body>
+</html>
