@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Curso</title>
+  <script src="js/course.js"></script>
+</head>
+
+<body onload="cargarCursoParaEditar()">
+
+  <h2>Editar Curso</h2>
+
+  Nombre:<br>
+  <input id="name"><br><br>
+
+  Código:<br>
+  <input id="code"><br><br>
+
+  Descripción:<br>
+  <input id="descripcion"><br><br>
+
+  Profesor ID:<br>
+  <input id="profesorId"><br><br>
+
+  <button onclick="updateCourse()">Actualizar</button>
+  <button onclick="location.href='list_courses.html'">Volver</button>
+
+</body>
+</html>
