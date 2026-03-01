@@ -1,0 +1,73 @@
+<h2>Login</h2>
+<form id="loginForm">
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+  <button type="submit">Login</button>
+</form>
+
+<p>¿No tienes cuenta?</p>
+<button onclick="goToRegister()">Registrarse</button>
+<pre id="result"></pre>
+
+<script>
+const API_BASE = "http://localhost:3001";
+
+//Muestra en pantalla la respuesta en formato JSON.
+function showJSON(obj) {
+  document.getElementById("result").textContent =
+    JSON.stringify(obj, null, 2);
+}
+
+//Redirige a la página de registro.
+function goToRegister() {
+  window.location.href = "register.html";
+}
+
+/**
+ * Maneja el proceso de inicio de sesión.
+ * Envía las credenciales al backend y guarda el token si es válido.
+ */
+async function login(event) {
+
+  // Evita que el formulario recargue la página
+  event.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showJSON({ error: "Email y contraseña son requeridos." });
+    return;
+  }
+
+  try {
+    // Envía las credenciales al endpoint de autenticación
+    const response = await fetch(`${API_BASE}/auth/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    // Si el servidor responde con error
+    if (!response.ok) {
+      showJSON(data);
+      return;
+    }
+
+    // Guarda el token en sessionStorage para usarlo en rutas protegidas
+    sessionStorage.setItem("token", data.token);
+
+    // Redirige a la pantalla principal si el login es exitoso
+    window.location.href = "courses.html";
+
+  } catch (err) {
+    showJSON({ error: "No se pudo conectar al servidor" });
+  }
+}
+
+// Cuando se presiona el botón Login, se activa el evento "submit" del formulario y se ejecuta la función login().
+document.getElementById("loginForm")
+  .addEventListener("submit", login);
+</script>

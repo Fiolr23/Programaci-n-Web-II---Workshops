@@ -1,0 +1,61 @@
+<h2>Registro</h2>
+<form id="registerForm">
+  <input type="text" id="name" placeholder="Name" required />
+  <input type="text" id="lastname" placeholder="LastName" required />
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+  <button type="submit">Register</button>
+</form>
+<pre id="result"></pre>
+
+<script>
+const API_BASE = "http://localhost:3001";
+//Muestra en pantalla la respuesta del servidor
+function showMessage(obj) {
+  document.getElementById("result").textContent =
+    JSON.stringify(obj, null, 2);
+}
+
+// Escucha el envío del formulario
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  
+  // Evita que la página se recargue
+  e.preventDefault();
+
+  // Construye el objeto usuario con los datos ingresados
+  const user = {
+    name: document.getElementById("name").value,
+    lastname: document.getElementById("lastname").value,
+    email: document.getElementById("email").value,
+    password: document.getElementById("password").value
+  };
+
+  try {
+
+    // Envía los datos al backend mediante una petición POST
+    const response = await fetch(`${API_BASE}/user`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user)
+    });
+
+    // Intenta convertir la respuesta en JSON
+    const data = await response.json().catch(() => ({}));
+
+    // Si el servidor responde con error (400, 500, etc.)
+    if (!response.ok) {
+      showMessage(data);
+      return;
+    }
+    showMessage({ message: "Usuario registrado correctamente" });
+
+    // Redirige al login después de 1.5 segundos
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
+
+  } catch (error) {
+    showMessage({ error: "No se pudo conectar al servidor" });
+  }
+});
+</script>
